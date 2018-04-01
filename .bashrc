@@ -1,0 +1,8 @@
+alias app_up='docker-compose -f dev/docker-compose.yml -p novaposhta up -d'
+alias app_stop='docker-compose -f dev/docker-compose.yml -p novaposhta stop'
+alias app_restart='docker-compose -f dev/docker-compose.yml -p novaposhta restart'
+alias composer='docker run -it --rm --volume $PWD:/app --user $(id -u):$(id -g) composer'
+alias console='docker-compose -f dev/docker-compose.yml -p novaposhta exec php bin/console'
+alias clear_cache='rm -rf var/cache/*'
+alias clear_db='rm -rf dev/volumes/db/*'
+alias test='./vendor/bin/simple-phpunit'

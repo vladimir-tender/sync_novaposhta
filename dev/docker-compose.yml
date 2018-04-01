@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb:10.2
+    container_name: db.novaposhta
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: novaposhta
+      MYSQL_PASSWORD: novaposhta
+      MYSQL_DATABASE: novaposhta
+    ports:
+      - '33061:3306'
+    volumes:
+      - ./volumes/db:/var/lib/mysql
+    networks:
+     - private
+
+  php:
+    build:
+      context: ./
+      dockerfile: Dockerfile-php
+    container_name: php.novaposhta
+    volumes:
+      - ../:/var/www/html:cached
+      - ./config/php.ini:/usr/local/etc/php/php.ini:ro
+    depends_on:
+      - db
+    networks:
+      - private
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx.novaposhta
+    volumes:
+      - ../:/var/www/html:cached
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - '8080:80'
+    depends_on:
+      - php
+    networks:
+      - private
+
+networks:
+  private:
+    driver: bridge
